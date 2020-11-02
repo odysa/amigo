@@ -2,6 +2,7 @@ package amigo
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -43,4 +44,15 @@ func (c *Context) JSON(code int, js interface{}) {
 	if err := encoder.Encode(js); err != nil {
 		http.Error(c.Writer, err.Error(), 500)
 	}
+}
+
+func (c *Context) String(code int, format string, values ...interface{}) {
+	c.SetHeader("Content-Type", "text/plain")
+	c.Status(code)
+	c.Writer.Write([]byte(fmt.Sprintf(format, values...)))
+}
+func (c *Context) HTML(code int, html string) {
+	c.SetHeader("Content-Type", "text/html")
+	c.Status(code)
+	c.Writer.Write([]byte(html))
 }

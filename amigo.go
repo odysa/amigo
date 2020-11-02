@@ -18,14 +18,13 @@ func (e *Engine) Get(pattern string, handler HandlerFunc) {
 	e.router.addRoute("GET", pattern, handler)
 }
 
-func (e *Engine) POST(pattern string, handler HandlerFunc) {
+func (e *Engine) Post(pattern string, handler HandlerFunc) {
 	e.router.addRoute("POST", pattern, handler)
 }
 
 // implement handler interface
 func (e *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	c := newContext(w, r)
-	e.router.handle(c)
+	e.router.handle(newContext(w, r))
 }
 
 func (e *Engine) Run(addr string) (err error) {
