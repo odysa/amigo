@@ -28,6 +28,7 @@ func (e *Engine) POST(pattern string, handler HandlerFunc) {
 	e.addRoute("POST", pattern, handler)
 }
 
+// implement handler interface
 func (e *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	key := r.Method + "-" + r.URL.Path
 	if handler, ok := e.router[key]; ok {
