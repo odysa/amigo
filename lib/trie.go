@@ -9,6 +9,10 @@ type Node struct {
 	exact    bool
 }
 
+func (n *Node) Pattern() string {
+	return n.pattern
+}
+
 func (n *Node) matchChild(part string) *Node {
 	for _, child := range n.children {
 		if child.part == part || !child.exact {
@@ -44,7 +48,6 @@ func (n *Node) Find(parts []string, height int) *Node {
 	}
 	return nil
 }
-
 func (n *Node) Insert(pattern string, parts []string, height int) {
 	if len(parts) == height {
 		n.pattern = pattern
@@ -54,6 +57,7 @@ func (n *Node) Insert(pattern string, parts []string, height int) {
 	child := n.matchChild(part)
 	if child == nil {
 		child = &Node{
+
 			part:  part,
 			exact: part[0] != ':' && part[0] != '*',
 		}
