@@ -14,9 +14,10 @@ type Context struct {
 	Path       string
 	Method     string
 	StatusCode int
+	Params     map[string]string
 }
 
-func newContext(w http.ResponseWriter, r *http.Request) *Context {
+func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	return &Context{
 		Writer: w,
 		R:      r,
@@ -32,7 +33,10 @@ func (c *Context) Status(code int) {
 func (c *Context) GetQuery(key string) string {
 	return c.R.URL.Query().Get(key)
 }
-
+func (c *Context) GetParam(key string) string {
+	value, _ := c.Params[key]
+	return value
+}
 func (c *Context) SetHeader(key string, value string) {
 	c.Writer.Header().Set(key, value)
 }
