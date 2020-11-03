@@ -1,2 +1,2 @@
 # amigo
-gin like web framework
+gin-like web framework by Golang
