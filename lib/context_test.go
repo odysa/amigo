@@ -1,4 +1,4 @@
-package amigo
+package lib
 
 import (
 	"net/http"

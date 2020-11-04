@@ -71,10 +71,10 @@ func (r *router) handle(c *Context) {
 		c.Params = params
 		key := c.Method + "-" + n.Pattern()
 		if handler, ok := r.handler[key]; ok {
-			c.handlers = append(c.handlers, handler)
+			c.AppendHandler(handler)
 		}
 	} else {
-		c.handlers = append(c.handlers, func(c *Context) {
+		c.AppendHandler(func(c *Context) {
 			c.Fail(404, "Page Not Found")
 		})
 	}

@@ -1,11 +1,15 @@
 package amigo
 
 import (
+	"github.com/odysa/amigo/lib"
+	"github.com/odysa/amigo/middlewares"
 	"net/http"
 	"strings"
 )
 
-type HandlerFunc func(c *Context)
+type Context = lib.Context
+type HandlerFunc = lib.HandlerFunc
+type H = lib.H
 
 type Engine struct {
 	*RouterGroup
@@ -23,9 +27,17 @@ func New() *Engine {
 	engine := &Engine{router: newRouter()}
 	engine.RouterGroup = &RouterGroup{engine: engine}
 	engine.groups = []*RouterGroup{engine.RouterGroup}
+	engine.Add(middlewares.Logger())
+	engine.Add(middlewares.Recovery())
 	return engine
 }
+func Raw() *Engine {
+	engine := &Engine{router: newRouter()}
+	engine.RouterGroup = &RouterGroup{engine: engine}
+	engine.groups = []*RouterGroup{engine.RouterGroup}
 
+	return engine
+}
 func (g *RouterGroup) Group(prefix string) *RouterGroup {
 	engine := g.engine
 	result := &RouterGroup{
@@ -56,11 +68,11 @@ func (g *RouterGroup) Add(wares ...HandlerFunc) {
 
 // implement handler interface
 func (e *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	c := NewContext(w, r)
+	c := lib.NewContext(w, r)
 
 	for _, group := range e.groups {
 		if strings.HasPrefix(r.URL.Path, group.prefix) {
-			c.handlers = append(c.handlers, group.middlewares...)
+			c.AppendHandler(group.middlewares...)
 		}
 	}
 

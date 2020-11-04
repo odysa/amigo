@@ -1,4 +1,4 @@
-package amigo
+package lib
 
 import (
 	"encoding/json"
@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 )
+
+type HandlerFunc func(c *Context)
 
 type H map[string]interface{}
 
@@ -72,6 +74,10 @@ func (c *Context) HTML(code int, html string) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
 	c.Writer.Write([]byte(html))
+}
+
+func (c *Context) AppendHandler(handlers ...HandlerFunc) {
+	c.handlers = append(c.handlers, handlers...)
 }
 
 func (c *Context) Next() {
