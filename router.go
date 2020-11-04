@@ -2,7 +2,6 @@ package amigo
 
 import (
 	"github.com/odysa/amigo/lib"
-	"net/http"
 	"strings"
 )
 
@@ -68,17 +67,17 @@ func (r *router) getRoute(method string, path string) (*lib.Node, map[string]str
 
 func (r *router) handle(c *Context) {
 	n, params := r.getRoute(c.Method, c.Path)
-
 	if n != nil {
 		c.Params = params
 		key := c.Method + "-" + n.Pattern()
 		if handler, ok := r.handler[key]; ok {
-			handler(c)
+			c.handlers = append(c.handlers, handler)
 		}
-		return
+	} else {
+		c.handlers = append(c.handlers, func(c *Context) {
+			c.Fail(404, "Page Not Found")
+		})
 	}
-
-	c.JSON(http.StatusNotFound, H{
-		"message": "404 Not Found",
-	})
+	//call next handler
+	c.Next()
 }
