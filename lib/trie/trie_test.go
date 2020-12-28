@@ -1,6 +1,8 @@
-package lib
+package trie
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestNodeInsert(t *testing.T) {
 	root := &Node{

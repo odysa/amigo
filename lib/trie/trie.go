@@ -1,4 +1,4 @@
-package lib
+package trie
 
 import "strings"
 
@@ -48,6 +48,7 @@ func (n *Node) Find(parts []string, height int) *Node {
 	}
 	return nil
 }
+
 func (n *Node) Insert(pattern string, parts []string, height int) {
 	if len(parts) == height {
 		n.pattern = pattern
@@ -57,7 +58,6 @@ func (n *Node) Insert(pattern string, parts []string, height int) {
 	child := n.matchChild(part)
 	if child == nil {
 		child = &Node{
-
 			part:  part,
 			exact: part[0] != ':' && part[0] != '*',
 		}
